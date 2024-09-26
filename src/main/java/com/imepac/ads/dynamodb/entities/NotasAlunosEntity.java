@@ -6,6 +6,8 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
+import java.time.Instant;
+
 
 @DynamoDbBean
 public class NotasAlunosEntity {
@@ -87,16 +89,14 @@ public class NotasAlunosEntity {
         this.nomeProfessor = nomeProfessor;
     }
 
-    static public NotasAlunosEntity fromNotaDTO(String matricula, String idDisciplina, NotaDTO notaDTO) {
+    public static NotasAlunosEntity fromNotaDTO(String matricula, String idDisciplina, NotaDTO notaDTO) {
         NotasAlunosEntity nota = new NotasAlunosEntity();
-        nota.setPk("ALUNO#" + matricula);
-        nota.setSk("NOTA#" + idDisciplina);
-        nota.setNomeAluno("Aluno");
-        nota.setDataNascimento("01/01/2000");
-        nota.setNota(String.valueOf(notaDTO.getNota()));
-        nota.setDataLancamento("01/01/2021");
-        nota.setNomeDisciplina(notaDTO.getDisciplina());
-        nota.setNomeProfessor(notaDTO.getProfessor());
+        nota.setPk(matricula);
+        nota.setSk("#NOTA".concat(idDisciplina));
+        nota.setNomeDisciplina(notaDTO.disciplina());
+        nota.setNomeProfessor(notaDTO.professor());
+        nota.setNota(String.valueOf(notaDTO.nota()));
+        nota.setDataLancamento(String.valueOf(Instant.now()));
         return nota;
     }
 }

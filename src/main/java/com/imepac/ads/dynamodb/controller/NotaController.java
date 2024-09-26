@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("v1/notas")
 public class NotaController {
-    private DynamoDbTemplate dynamoDbTemplate;
+    private final DynamoDbTemplate dynamoDbTemplate;
 
     public NotaController(DynamoDbTemplate dynamoDbTemplate) {
         this.dynamoDbTemplate = dynamoDbTemplate;
@@ -34,12 +34,12 @@ public class NotaController {
     public ResponseEntity<Void> salvar(
             @PathVariable("matricula") String matricula,
             @PathVariable("idDisciplina") String idDisciplina,
-            @RequestBody NotaDTO notaDTO
-    ) {
+            @RequestBody NotaDTO nota)
+    {
 
-        NotasAlunosEntity nota = NotasAlunosEntity.fromNotaDTO(matricula, idDisciplina, notaDTO);
+        var entity = NotasAlunosEntity.fromNotaDTO(matricula, idDisciplina, nota);
 
-        dynamoDbTemplate.save(nota);
+        dynamoDbTemplate.save(entity);
 
         return ResponseEntity.noContent().build();
     }
